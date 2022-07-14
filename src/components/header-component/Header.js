@@ -3,10 +3,14 @@ import { useEffect } from 'react';
 
 import './header.css'
 
-const Header = ({algorithm, onAlgorithmChange}) => {
+const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
 
   const onSelection = (e) => {
     onAlgorithmChange(e.target.value);
+  }
+
+  const onRangeChange = (e) => {
+    onElementsChange(e.target.value);
   }
 
   return (
@@ -16,10 +20,11 @@ const Header = ({algorithm, onAlgorithmChange}) => {
           Randomize Order
         </h2>
 			</div>
-			<div>
+			<div className='range-div'>
         <h2>
           Change number of elements
         </h2>
+        <input onChange={onRangeChange} value={elements} type='range' min='4' max='100' />
 			</div>
 			<div className='algorithm-select' >
         <button onClick={onSelection} value='insertion' className={algorithm === 'insertion' ? 'selected clickable' : 'clickable'} >

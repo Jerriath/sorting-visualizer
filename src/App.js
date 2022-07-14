@@ -14,15 +14,23 @@ const {useState, useEffect} = react;
 const App = () => {
 	// Setting some states up 
 	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
-	const [elements, setElements] = useState(5); // Sets the number of elements to sort; default to 5
+	const [elements, setElements] = useState(4); // Sets the number of elements to sort; default to 4
 
 	const onAlgorithmChange = (newAlgorithm) => {
 		setAlgorithm(newAlgorithm);
 	}
 
+  const onElementsChange = (newElements) => {
+    setElements(newElements);
+  }
+
   return (
     <div className="App">
-      <Header algorithm={algorithm} onAlgorithmChange={onAlgorithmChange} />
+      <Header 
+        algorithm={algorithm} 
+        onAlgorithmChange={onAlgorithmChange} 
+        elements={elements} 
+        onElementsChange={onElementsChange} />
       <Visualizer elements={elements} />
       <Footer />
     </div>
