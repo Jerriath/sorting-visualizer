@@ -1,19 +1,29 @@
 // Importing node modules
 import * as react from 'react';
 
-//Importing styles
+//Importing other files from project
+import Footer from './components/footer-component/Footer';
+import Header from './components/header-component/Header';
+import Visualizer from './components/visualizer-component/Visualizer';
 import './App.css';
 
 // Destructuring react functionalities
 const {useState, useEffect} = react;
 
 
-function App() {
+const App = () => {
+	// Setting some states up 
+	const [algorithm, setAlgorithm] = useState(''); // This will probably be set to merge sort on default or something
+	const [elements, setElements] = useState(5); // Sets the number of elements to sort; default to 5
+
+	const onAlgorithmChange = (newAlgorithm) => {
+		setAlgorithm(newAlgorithm);
+	}
 
   return (
     <div className="App">
-      <Nav />
-      <Visualizer />
+      <Header algorithm={algorithm} onAlgorithmChange={onAlgorithmChange} />
+      <Visualizer elements={elements} />
       <Footer />
     </div>
   );
