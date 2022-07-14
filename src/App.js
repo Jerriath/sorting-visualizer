@@ -13,7 +13,7 @@ const {useState, useEffect} = react;
 
 const App = () => {
 	// Setting some states up 
-	const [algorithm, setAlgorithm] = useState(''); // This will probably be set to merge sort on default or something
+	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
 	const [elements, setElements] = useState(5); // Sets the number of elements to sort; default to 5
 
 	const onAlgorithmChange = (newAlgorithm) => {
