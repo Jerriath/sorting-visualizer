@@ -2,7 +2,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 
-// Importing other files from project
+// Importing other project files
 import './visualizer.css';
 
 const Visualizer = ({elements, algorithm}) => {

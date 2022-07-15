@@ -1,7 +1,7 @@
 // Importing node modules
 import * as react from 'react';
 
-//Importing other files from project
+//Importing other project files
 import Footer from './components/footer-component/Footer';
 import Header from './components/header-component/Header';
 import Visualizer from './components/visualizer-component/Visualizer';
