@@ -1,26 +1,17 @@
 // Importing node modules
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
 
 // Importing other project files
 import './visualizer.css';
 
-const Visualizer = ({elements, algorithm}) => {
+const Visualizer = ({algorithm, array}) => {
 
-  const [array, setArray] = useState([]);
-  // Note: max height for an element should be 400px;
-
-  useEffect( () => {
-    let tempArray = [];
-    for (let i = 0; i < elements; i++) {
-      tempArray.push(Math.floor(400 * Math.random()))
-    }
-    setArray(tempArray);
-  }, [elements])
-
+  // Eventually will prob change this to map to an Element component
   return (
     <div className='visualizer-root'>
-      {array.map((height) => {return <div className='element' style={{height: height}}></div>})}
+      {array.map((height) => {return <div key={uuid()} className='element' style={{height: height}}></div>})}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import './header.css'
 
-const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
+const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, onRandomize}) => {
 
   const onSelection = (e) => {
     onAlgorithmChange(e.target.value);
@@ -16,7 +16,7 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
   return (
     <header>
 			<div>
-				<h2 className='clickable' >
+				<h2 onClick={onRandomize} className='clickable' >
           Randomize Order
         </h2>
 			</div>
@@ -44,7 +44,7 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
         </button>
 			</div>
 			<div>
-        <h2 className='clickable' >
+        <h2 className='clickable' style={{padding: '0.5rem', fontSize: '2rem'}} >
           SORT!
         </h2>
 			</div>

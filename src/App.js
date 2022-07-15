@@ -15,6 +15,15 @@ const App = () => {
 	// Setting some states up; All states are stored here and the values and onChange handlers are passed to children
 	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
 	const [elements, setElements] = useState(4); // Sets the number of elements to sort; default to 4
+  const [array, setArray] = useState([]);
+
+  useEffect( () => {
+    let tempArray = [];
+    for (let i = 0; i < elements; i++) {
+      tempArray.push(Math.floor(400 * Math.random()))
+    }
+    setArray(tempArray);
+  }, [elements])
 
 	const onAlgorithmChange = (newAlgorithm) => {
 		setAlgorithm(newAlgorithm);
@@ -24,16 +33,24 @@ const App = () => {
     setElements(newElements);
   }
 
+  const onRandomize = () => {
+    let temp = [...array];
+    temp.sort((a, b) => 0.5 - Math.random())
+    setArray(temp);
+  }
+
   return (
     <div className="App">
       <Header 
         algorithm={algorithm} 
         onAlgorithmChange={onAlgorithmChange} 
         elements={elements} 
-        onElementsChange={onElementsChange} />
+        onElementsChange={onElementsChange}
+        onRandomize={onRandomize} />
       <Visualizer 
         elements={elements}
-        algorithm={algorithm} />
+        algorithm={algorithm}
+        array={array} />
       <Footer />
     </div>
   );
