@@ -16,6 +16,7 @@ const App = () => {
 	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
 	const [elements, setElements] = useState(4); // Sets the number of elements to sort; default to 4
   const [array, setArray] = useState([]);
+  const [sorting, setSorting] = useState(false);
 
   useEffect( () => {
     let tempArray = [];
@@ -39,6 +40,14 @@ const App = () => {
     setArray(temp);
   }
 
+  const onSort = () => {
+    setSorting(true);
+  }
+
+  const stopSort = () => {
+    setSorting(false);
+  }
+
   return (
     <div className="App">
       <Header 
@@ -46,11 +55,13 @@ const App = () => {
         onAlgorithmChange={onAlgorithmChange} 
         elements={elements} 
         onElementsChange={onElementsChange}
-        onRandomize={onRandomize} />
+        onRandomize={onRandomize}
+        onSort={onSort} />
       <Visualizer 
-        elements={elements}
         algorithm={algorithm}
-        array={array} />
+        array={array}
+        sorting={sorting}
+        stopSort={stopSort} />
       <Footer />
     </div>
   );

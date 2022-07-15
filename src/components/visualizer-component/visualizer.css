@@ -13,13 +13,13 @@
 }
 
 .sorted {
-  background-color: green;
+  background-color: green !important;
 }
 
 .checking {
-  background-color: yellow;
+  background-color: yellow !important;
 }
 
 .sorting {
-  background-color: firebrick;
+  background-color: firebrick !important;
 }
