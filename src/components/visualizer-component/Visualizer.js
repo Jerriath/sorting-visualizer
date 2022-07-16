@@ -9,7 +9,7 @@ import insertionSort from './insertionSort';
 import bubbleSort from './bubbleSort';
 import Element from '../element-component/Element';
 
-const Visualizer = ({algorithm, array, sorting, stopSort}) => {
+const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
 
   const [elementsArray, setElementsArray] = useState([]);
 
@@ -19,7 +19,7 @@ const Visualizer = ({algorithm, array, sorting, stopSort}) => {
 
   useEffect(() => {
     if (sorting === true) {
-      bubbleSort(elementsArray, stopSort, setElementsArray);
+      bubbleSort(elementsArray, stopSort, setElementsArray, speed);
     }
   }, [sorting])
 

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import './header.css'
 
-const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, onRandomize, onSort}) => {
+const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, speed, onSpeedChange, onRandomize, onSort}) => {
 
   const onSelection = (e) => {
     onAlgorithmChange(e.target.value);
@@ -11,6 +11,10 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, onRan
 
   const onRangeChange = (e) => {
     onElementsChange(e.target.value);
+  }
+
+  const onIntervalChange = (e) => {
+    onSpeedChange(e.target.value);
   }
 
   return (
@@ -25,6 +29,10 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, onRan
           Change number of elements
         </h2>
         <input onChange={onRangeChange} value={elements} type='range' min='4' max='100' />
+        <h2>
+          Set the speed
+        </h2>
+        <input onChange={onIntervalChange} value={500 - speed} type='range' min='0' max='500' />
 			</div>
 			<div className='algorithm-select' >
         <button onClick={onSelection} value='insertion' className={algorithm === 'insertion' ? 'selected clickable' : 'clickable'} >

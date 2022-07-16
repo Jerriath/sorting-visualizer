@@ -15,6 +15,7 @@ const App = () => {
 	// Setting some states up; All states are stored here and the values and onChange handlers are passed to children
 	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
 	const [elements, setElements] = useState(4); // Sets the number of elements to sort; default to 4
+  const [speed, setSpeed] = useState(500);
   const [array, setArray] = useState([]);
   const [sorting, setSorting] = useState(false);
 
@@ -34,6 +35,10 @@ const App = () => {
     setElements(newElements);
   }
 
+  const onSpeedChange = (newSpeed) => {
+    setSpeed(500 - newSpeed);
+  }
+
   const onRandomize = () => {
     let temp = [...array];
     temp.sort((a, b) => 0.5 - Math.random())
@@ -41,7 +46,9 @@ const App = () => {
   }
 
   const onSort = () => {
-    setSorting(true);
+    if (sorting !== true) {
+      setSorting(true);
+    }
   }
 
   const stopSort = () => {
@@ -55,11 +62,14 @@ const App = () => {
         onAlgorithmChange={onAlgorithmChange} 
         elements={elements} 
         onElementsChange={onElementsChange}
+        speed={speed}
+        onSpeedChange={onSpeedChange}
         onRandomize={onRandomize}
         onSort={onSort} />
       <Visualizer 
         algorithm={algorithm}
         array={array}
+        speed={speed}
         sorting={sorting}
         stopSort={stopSort} />
       <Footer />
