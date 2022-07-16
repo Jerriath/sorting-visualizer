@@ -3,18 +3,18 @@ import { useEffect } from 'react';
 
 import './header.css'
 
-const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, speed, onSpeedChange, onRandomize, onSort}) => {
+const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, speed, onSpeedChange, onRandomize, onSort, sorting}) => {
 
   const onSelection = (e) => {
-    onAlgorithmChange(e.target.value);
+    if(!sorting) onAlgorithmChange(e.target.value);
   }
 
   const onRangeChange = (e) => {
-    onElementsChange(e.target.value);
+    if(!sorting) onElementsChange(e.target.value);
   }
 
   const onIntervalChange = (e) => {
-    onSpeedChange(e.target.value);
+    if(!sorting) onSpeedChange(e.target.value);
   }
 
   return (

@@ -65,7 +65,8 @@ const App = () => {
         speed={speed}
         onSpeedChange={onSpeedChange}
         onRandomize={onRandomize}
-        onSort={onSort} />
+        onSort={onSort}
+        sorting={sorting} />
       <Visualizer 
         algorithm={algorithm}
         array={array}

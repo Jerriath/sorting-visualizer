@@ -19,7 +19,28 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
 
   useEffect(() => {
     if (sorting === true) {
-      bubbleSort(elementsArray, stopSort, setElementsArray, speed);
+      switch(algorithm) {
+        case 'insertion':
+          // insertionSort();
+          stopSort();
+          break;
+        case 'selection':
+          // selectionSort();
+          stopSort();
+          break;
+        case 'bubble':
+          bubbleSort(elementsArray, stopSort, setElementsArray, speed);
+          break;
+        case 'merge':
+          // mergeSort();
+          stopSort();
+          break;
+        case 'quick':
+          // quickSort();
+          stopSort();
+          break;
+      }
+      
     }
   }, [sorting])
 
