@@ -6,12 +6,58 @@ const bubbleSort = (array, stopSort, setElementsArray) => {
   recursiveCheck(temp, 0, setElementsArray);
   setTimeout(() => {
     stopSort();
-  }, 900 * array.length)
+  }, 200 * array.length)
   return;
 }
 
 const recursiveSort = (temp, i, setElementsArray) => {
   // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
+  // setTimeout(() => {
+  //   temp[i] = <Element key={uuid()} height={temp[i].props.height} classList='element sorting' />;
+  //   temp[i+1] = <Element key={uuid()} height={temp[i+1].props.height} classList='element sorting' />;
+  //   setElementsArray(temp);
+  //   recursiveSorting(temp, i, setElementsArray);
+  // }, 200)
+  temp = [...temp];
+  temp[i] = <Element key={uuid()} height={temp[i].props.height} classList='element sorting' />;
+  temp[i+1] = <Element key={uuid()} height={temp[i+1].props.height} classList='element sorting' />;
+  setElementsArray(temp);
+  setTimeout(() => {
+    recursiveSorting(temp, i, setElementsArray);
+  }, 200)
+}
+
+const recursiveSorting = (temp, i, setElementsArray) => {
+  // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
+  // setTimeout(() => {
+  //   let firstElement = temp[i]
+  //   temp[i] = temp[i+1];
+  //   temp[i+1] = firstElement;
+  //   setElementsArray(temp);
+  //   recursiveNext(temp, i, setElementsArray);
+  // }, 200)
+  temp = [...temp];
+  let firstElement = temp[i]
+  temp[i] = temp[i+1];
+  temp[i+1] = firstElement;
+  setElementsArray(temp);
+  setTimeout(() => {
+    recursiveNext(temp, i, setElementsArray);
+  }, 200);
+}
+
+const recursiveNext = (temp, i, setElementsArray) => {
+  // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
+  // setTimeout(() => {
+  //   temp = temp.map((el, i) => <Element key={uuid()} height={temp[i].props.height} classList='element' />)
+  //   setElementsArray(temp);
+  //   recursiveCheck(temp, i+1, setElementsArray);
+  // }, 200)
+  temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />)
+  setElementsArray(temp);
+  setTimeout(() => {
+    recursiveCheck(temp, i+1, setElementsArray);
+  }, 200)
 }
 
 const recursiveCheck = (temp, i, setElementsArray) => {
@@ -24,9 +70,12 @@ const recursiveCheck = (temp, i, setElementsArray) => {
       temp[i + 1] = <Element key={uuid()} height={heightSecond} classList='element checking' />;
       setElementsArray(temp);
       if (heightSecond > heightFirst) {
-        // recursiveSort(temp, i, setElementsArray);
+        setTimeout(() => {
+          recursiveSort(temp, i, setElementsArray);
+        }, 200)
       }
-      if (i <= temp.length - 2) {
+      // Eventually will be an else if
+      else if (i <= temp.length - 2) {
         recursiveCheck(temp, i+1, setElementsArray);
       }
     }
