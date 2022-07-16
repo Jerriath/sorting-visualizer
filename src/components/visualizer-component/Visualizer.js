@@ -5,8 +5,11 @@ import { v4 as uuid } from 'uuid';
 
 // Importing other project files
 import './visualizer.css';
-import insertionSort from './insertionSort';
-import bubbleSort from './bubbleSort';
+import bubbleSort from './sorting-functions/bubbleSort';
+import insertionSort from './sorting-functions/insertionSort';
+import mergeSort from './sorting-functions/mergeSort';
+import quickSort from './sorting-functions/quickSort';
+import selectionSort from './sorting-functions/selectionSort';
 import Element from '../element-component/Element';
 
 const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
@@ -21,22 +24,22 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
     if (sorting === true) {
       switch(algorithm) {
         case 'insertion':
-          // insertionSort();
+          insertionSort();
           stopSort();
           break;
         case 'selection':
-          // selectionSort();
+          selectionSort();
           stopSort();
           break;
         case 'bubble':
           bubbleSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'merge':
-          // mergeSort();
+          mergeSort();
           stopSort();
           break;
         case 'quick':
-          // quickSort();
+          quickSort();
           stopSort();
           break;
       }

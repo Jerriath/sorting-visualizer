@@ -1,6 +1,6 @@
 // Importing node modules
 import {v4 as uuid} from 'uuid';
-import Element from '../element-component/Element';
+import Element from '../../element-component/Element';
 
 // There is a ton of inputs in all the functions because, since I'm using timeouts, the state of the variable needs to persist
 // Also ,I destructured the props from App.js which adds to this. For the next sorting function, I will not destructure to make it look nicer
@@ -8,7 +8,6 @@ const bubbleSort = (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
   let altered = false;
   recursiveCheck(temp, 0, speed, setElementsArray, altered, stopSort);
-
   return;
 }
 
