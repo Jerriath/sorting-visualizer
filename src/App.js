@@ -41,7 +41,9 @@ const App = () => {
   }
 
   const onSort = () => {
-    setSorting(true);
+    if (sorting !== true) {
+      setSorting(true);
+    }
   }
 
   const stopSort = () => {

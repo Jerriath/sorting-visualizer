@@ -3,64 +3,42 @@ import Element from '../element-component/Element';
 
 const bubbleSort = (array, stopSort, setElementsArray) => {
   let temp = [...array];
-  recursiveCheck(temp, 0, setElementsArray);
-  setTimeout(() => {
-    stopSort();
-  }, 200 * array.length)
+  let altered = false;
+  recursiveCheck(temp, 0, setElementsArray, altered, stopSort, setElementsArray);
+
   return;
 }
 
-const recursiveSort = (temp, i, setElementsArray) => {
-  // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
-  // setTimeout(() => {
-  //   temp[i] = <Element key={uuid()} height={temp[i].props.height} classList='element sorting' />;
-  //   temp[i+1] = <Element key={uuid()} height={temp[i+1].props.height} classList='element sorting' />;
-  //   setElementsArray(temp);
-  //   recursiveSorting(temp, i, setElementsArray);
-  // }, 200)
+const recursiveSort = (temp, i, setElementsArray, altered, stopSort) => {
   temp = [...temp];
   temp[i] = <Element key={uuid()} height={temp[i].props.height} classList='element sorting' />;
   temp[i+1] = <Element key={uuid()} height={temp[i+1].props.height} classList='element sorting' />;
   setElementsArray(temp);
   setTimeout(() => {
-    recursiveSorting(temp, i, setElementsArray);
-  }, 200)
+    recursiveSorting(temp, i, setElementsArray, altered, stopSort);
+  }, 300)
 }
 
-const recursiveSorting = (temp, i, setElementsArray) => {
-  // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
-  // setTimeout(() => {
-  //   let firstElement = temp[i]
-  //   temp[i] = temp[i+1];
-  //   temp[i+1] = firstElement;
-  //   setElementsArray(temp);
-  //   recursiveNext(temp, i, setElementsArray);
-  // }, 200)
+const recursiveSorting = (temp, i, setElementsArray, altered, stopSort) => {
   temp = [...temp];
   let firstElement = temp[i]
   temp[i] = temp[i+1];
   temp[i+1] = firstElement;
   setElementsArray(temp);
   setTimeout(() => {
-    recursiveNext(temp, i, setElementsArray);
-  }, 200);
+    recursiveNext(temp, i, setElementsArray, altered, stopSort);
+  }, 300);
 }
 
-const recursiveNext = (temp, i, setElementsArray) => {
-  // Need to figure out a way to change checking to sorting and then swap and then change everything to element IN THAT ORDER (like an animation)
-  // setTimeout(() => {
-  //   temp = temp.map((el, i) => <Element key={uuid()} height={temp[i].props.height} classList='element' />)
-  //   setElementsArray(temp);
-  //   recursiveCheck(temp, i+1, setElementsArray);
-  // }, 200)
+const recursiveNext = (temp, i, setElementsArray, altered, stopSort) => {
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />)
   setElementsArray(temp);
   setTimeout(() => {
-    recursiveCheck(temp, i+1, setElementsArray);
-  }, 200)
+    recursiveCheck(temp, i+1, setElementsArray, altered, stopSort);
+  }, 0)
 }
 
-const recursiveCheck = (temp, i, setElementsArray) => {
+const recursiveCheck = (temp, i, setElementsArray, altered, stopSort) => {
   setTimeout(() => {
     if (i !== temp.length - 1) {
       let heightFirst = temp[i].props.height;
@@ -69,21 +47,28 @@ const recursiveCheck = (temp, i, setElementsArray) => {
       temp[i] = <Element key={uuid()} height={heightFirst} classList='element checking' />;
       temp[i + 1] = <Element key={uuid()} height={heightSecond} classList='element checking' />;
       setElementsArray(temp);
-      if (heightSecond > heightFirst) {
+      if (heightSecond < heightFirst) {
+        altered = true;
         setTimeout(() => {
-          recursiveSort(temp, i, setElementsArray);
-        }, 200)
+          recursiveSort(temp, i, setElementsArray, altered, stopSort);
+        }, 300)
       }
       // Eventually will be an else if
       else if (i <= temp.length - 2) {
-        recursiveCheck(temp, i+1, setElementsArray);
+        recursiveCheck(temp, i+1, setElementsArray, altered, stopSort);
       }
     }
     else {
       temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />)
       setElementsArray(temp);
+      if (altered){
+        bubbleSort(temp, stopSort, setElementsArray);
+      } 
+      else {
+        stopSort();
+      }
     }
-  }, 200 )
+  }, 300 )
 }
 
 export default bubbleSort;
