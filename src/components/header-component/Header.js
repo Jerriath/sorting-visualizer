@@ -20,7 +20,7 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, speed
   return (
     <header>
 			<div>
-				<h2 onClick={onRandomize} className='clickable' >
+				<h2 onClick={!sorting ? onRandomize : null} className='clickable' >
           Randomize Order
         </h2>
 			</div>

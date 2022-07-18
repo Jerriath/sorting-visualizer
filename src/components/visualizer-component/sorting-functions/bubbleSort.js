@@ -3,7 +3,6 @@ import {v4 as uuid} from 'uuid';
 import Element from '../../element-component/Element';
 
 // There is a ton of inputs in all the functions because, since I'm using timeouts, the state of the variable needs to persist
-// Also, I destructured the props from App.js which adds to this. For the next sorting function, I will not destructure to make it look nicer
 const bubbleSort = (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
   let altered = false;
@@ -43,11 +42,11 @@ const initiateNext = (temp, i, speed, setElementsArray, altered, stopSort) => {
   }, 0)
 }
 
-// This function does more of the heavy lifting; it looks at the current and next index to see what should be done
-// If the two need to be swapped, it will initiate the sorting functions above, if not then it will move on
-// If the current index is at the last element, the function will check to see if anything was swapped by looking at 'altered'
+// This function does most of the heavy lifting; it looks at the current and next index to see what should be done
+// If the two need to be swapped, it will initiate the sorting functions above, if not then it will move on and check the next two values
+// If the current index is at the last element in the array, the function will check to see if anything was swapped in this pass by looking at 'altered'
   // If altered is true, the whole process will start again with another pass and keep going until altered remains false for an entire pass
-  // If altered remained false, the sort will stop.
+  // If altered remained false, the sorting will stop.
 const incrementCheck = (temp, i, speed, setElementsArray, altered, stopSort) => {
   setTimeout(() => {
     if (i !== temp.length - 1) {
