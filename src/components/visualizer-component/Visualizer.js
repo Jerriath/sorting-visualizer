@@ -24,7 +24,7 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
     if (sorting === true) {
       switch(algorithm) {
         case 'insertion':
-          insertionSort();
+          insertionSort(elementsArray, stopSort, setElementsArray, speed);
           stopSort();
           break;
         case 'selection':

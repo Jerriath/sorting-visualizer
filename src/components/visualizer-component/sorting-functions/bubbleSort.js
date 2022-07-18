@@ -63,8 +63,7 @@ const recursiveCheck = (temp, i, speed, setElementsArray, altered, stopSort) => 
           recursiveSort(temp, i, speed, setElementsArray, altered, stopSort);
         }, speed)
       }
-      // Eventually will be an else if
-      else if (i <= temp.length - 2) {
+      else if (i < temp.length - 1) {
         recursiveCheck(temp, i+1, speed, setElementsArray, altered, stopSort);
       }
     }
