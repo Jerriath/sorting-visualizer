@@ -27,8 +27,7 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
           insertionSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'selection':
-          selectionSort();
-          stopSort();
+          selectionSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'bubble':
           bubbleSort(elementsArray, stopSort, setElementsArray, speed);
