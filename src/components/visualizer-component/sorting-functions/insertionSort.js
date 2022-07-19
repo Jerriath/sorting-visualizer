@@ -41,9 +41,9 @@ const incrementCheck = (temp, i, stopSort, setElementsArray, speed) => {
 
 // Function initiates the swapping process between the workingIndex and previous by switching their color
 // Stores currentIndex so that, when the workingIndex is being sorted, the currentIndex value is being stored
-// THis is os that, when the workingIndex is in its final position, incrementCheck can resume from the original index + 1
+// This is so that, when the workingIndex is in its final position, incrementCheck can resume from the original index + 1
 const initiateSwap = (temp, currentIndex, workingIndex, stopSort, setElementsArray, speed) => {
-  if (workingIndex == 0) {
+  if (workingIndex === 0) {
     incrementCheck(temp, currentIndex + 1, stopSort, setElementsArray, speed);
   }
   else {
