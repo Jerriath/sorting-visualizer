@@ -8,6 +8,12 @@ const selectionSort = (array, stopSort, setElementsArray, speed) => {
   return;
 }
 
+// Essentially starts the process to check for the next lowest value to be swapped with the currentIndex
+// First checks to see if we are before the last element in the array
+  // If we are before, then it will set the element after currentIndex to currentChecking and see if it is less than currentIndex
+    // If it is less than it, currentLowest will be set to currentChecking
+    // If not, currentLowest is set to currentIndex
+  // If we are at the last element, we will set everything back to normal colors and stop sort as there is nothing to compare with the last element
 const checkForLowest = (temp, currentIndex, stopSort, setElementsArray, speed) => {
   setTimeout(() => {
     if (currentIndex < temp.length - 1) {
@@ -30,6 +36,9 @@ const checkForLowest = (temp, currentIndex, stopSort, setElementsArray, speed) =
   }, speed)
 }
 
+// This will recursively check every element after currentIndex (via currentChecking) and see if it is less than the currentLowest
+  // If it is, currentLowest will be set to currentChecking and repeated
+  // Once we get to the last element to be checked, the swapping between currentLowest and currentIndex will be initiated
 const incrementCheck = (temp, currentIndex, currentChecking, currentLowest, stopSort, setElementsArray, speed) => {
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
   currentChecking++;
@@ -49,6 +58,8 @@ const incrementCheck = (temp, currentIndex, currentChecking, currentLowest, stop
   }
 }
 
+// Sets currentIndex and currentLowest to sorting colors for visualization purpose and will call initiateSwapping after a timeout
+// If currentLowest remained the same as currentIndex the entire time, initiateNext will run
 const initiateSwap = (temp, currentIndex, currentLowest, stopSort, setElementsArray, speed) => {
   temp = [...temp];
   if (currentIndex !== currentLowest) {
@@ -68,6 +79,8 @@ const initiateSwap = (temp, currentIndex, currentLowest, stopSort, setElementsAr
   }
 }
 
+// Responsible for actually swapping the currentIndex with currentLowest
+// Afterwards, initiateNext will run
 const initiateSwapping = (temp, currentIndex, currentLowest, stopSort, setElementsArray, speed) => {
   temp = [...temp];
   let currentElement = temp[currentIndex];
@@ -79,6 +92,7 @@ const initiateSwapping = (temp, currentIndex, currentLowest, stopSort, setElemen
   }, speed)
 }
 
+// Simply cleans up everything and runs the next checkForLowest on currentIndex++
 const initiateNext = (temp, currentIndex, currentLowest, stopSort, setElementsArray, speed) => {
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
   setElementsArray(temp);
