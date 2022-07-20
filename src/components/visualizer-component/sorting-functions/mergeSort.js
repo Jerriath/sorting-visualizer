@@ -6,18 +6,44 @@ const mergeSort = async (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
   let l = 0;
   let r = array.length - 1;
-  await recursiveSplit(temp, l, r, setElementsArray, speed);
+  let indicesArray = [];
+  recursiveSplit(l, r, indicesArray);
+  console.log(indicesArray);
+  for (let i = 0; i < indicesArray.length; i++) {
+    temp = await merge(temp, indicesArray[i][0], indicesArray[i][1], indicesArray[i][2], setElementsArray, speed);
+    console.log(temp);
+  }
+  console.log(temp);
+  temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
+  setElementsArray(temp);
   stopSort();
 }
 
-const recursiveSplit = async (temp, l, r, setElementsArray, speed) => {
-  if (l >= r) return;
-  let m = Math.floor((l+r) / 2);
-  await recursiveSplit(temp, l, m, setElementsArray, speed);
-  await recursiveSplit(temp, m + 1, r, setElementsArray, speed);
-  await merge(temp, l, m, r, setElementsArray, speed);
+// I am going to try to create an array of l, m, and r values recursively and push them onto an array
+// For each l, m, and r value, I will call merge on them and this will keep the sorted temp for each call
+const recursiveSplit = (l, r, indicesArray) => {
+  if (l >= r) return ;
+  let m = Math.floor((l+r)/2);
+  recursiveSplit(l, m, indicesArray);
+  recursiveSplit(m+1, r, indicesArray);
+  indicesArray.push([l, m, r]);
 }
 
+
+
+// This won't work because temp gets reset after every rucrusive call; In other words, each recursive call is being called with the original temp
+// This temp can't be changed after the recursive call, but we also can't change temp without the recursive call
+// Ugh circular dependency
+
+// const recursiveSplit = async (temp, l, r, setElementsArray, speed) => {
+//   if (l >= r) return;
+//   let m = Math.floor((l+r) / 2);
+//   await recursiveSplit(temp, l, m, setElementsArray, speed);
+//   await recursiveSplit(temp, m + 1, r, setElementsArray, speed);
+//   await merge(temp, l, m, r, setElementsArray, speed);
+// }
+
+// This works 
 const merge = async (temp, l, m, r, setElementsArray, speed) => {
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
   // Defining the ranges of the left and right arrays
@@ -50,7 +76,6 @@ const merge = async (temp, l, m, r, setElementsArray, speed) => {
         resolve();
       }, speed);
     }).then(async () => {
-      console.log('merge');
       temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
       temp[leftIndex + l + rightIndex] = <Element key={uuid()} height={temp[leftIndex + l + rightIndex].props.height} classList='element checking' />;
       temp[rightIndex + leftArray.length + l] = <Element key={uuid()} height={temp[rightIndex + leftArray.length + l].props.height} classList='element checking' />;
@@ -62,11 +87,11 @@ const merge = async (temp, l, m, r, setElementsArray, speed) => {
     }
     else {
       temp = await initiateSort(temp, tempIndex, rightIndex + l + leftArray.length, setElementsArray, speed);
-      console.log(temp);
       rightIndex++;
     }
     tempIndex++;
   }
+  return temp;
   // await new Promise((resolve, reject) => {
   //   setTimeout(async () => {
   //     temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
@@ -84,7 +109,6 @@ const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) =
       resolve();
     }, speed)
   }).then(async () => {
-    console.log('initiate-sort')
     temp = [...temp];
     temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element sorting' />;
     temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element sorting' />;
@@ -101,7 +125,6 @@ const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, spee
       resolve();
     }, speed)
   }).then(async () => {
-    console.log('initiate-swapping')
     temp = [...temp];
     let elementTwo = temp.splice(indexTwo, 1)[0];
     temp.splice(indexOne, 0, elementTwo);
