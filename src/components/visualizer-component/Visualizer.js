@@ -33,8 +33,7 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
           bubbleSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'merge':
-          mergeSort();
-          stopSort();
+          mergeSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'quick':
           quickSort();

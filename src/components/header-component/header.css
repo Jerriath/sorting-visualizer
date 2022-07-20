@@ -13,6 +13,10 @@ header > div > h2, button {
   border: none;
 }
 
+header > div {
+  flex: .25
+}
+
 .clickable {
   transition: all 0.2s linear;
   border-radius: 0.75rem;
@@ -22,7 +26,7 @@ header > div > h2, button {
 }
 
 .clickable:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
   background-color: rgba(0, 0, 0, 0.05);
 }
