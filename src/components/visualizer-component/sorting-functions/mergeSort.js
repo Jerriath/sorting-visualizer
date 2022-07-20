@@ -2,25 +2,25 @@
 import {v4 as uuid} from 'uuid';
 import Element from '../../element-component/Element';
 
+// Creates an indices array to know which elements at which indices to merge sequentially
+// For each set of indices, the two "subarrays" are merged in-place
+// After everything is sorted, colors are returned to normal and stopSort is called
 const mergeSort = async (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
   let l = 0;
   let r = array.length - 1;
   let indicesArray = [];
   recursiveSplit(l, r, indicesArray);
-  console.log(indicesArray);
   for (let i = 0; i < indicesArray.length; i++) {
     temp = await merge(temp, indicesArray[i][0], indicesArray[i][1], indicesArray[i][2], setElementsArray, speed);
-    console.log(temp);
   }
-  console.log(temp);
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
   setElementsArray(temp);
   stopSort();
 }
 
-// I am going to try to create an array of l, m, and r values recursively and push them onto an array
-// For each l, m, and r value, I will call merge on them and this will keep the sorted temp for each call
+// Creates an array of l, m, and r values (i.e. [l, m, r]) recursively and pushes them onto an indicesArray
+// For each l, m, and r value, merge will be called on them
 const recursiveSplit = (l, r, indicesArray) => {
   if (l >= r) return ;
   let m = Math.floor((l+r)/2);
@@ -28,22 +28,11 @@ const recursiveSplit = (l, r, indicesArray) => {
   recursiveSplit(m+1, r, indicesArray);
   indicesArray.push([l, m, r]);
 }
-
-
-
-// This won't work because temp gets reset after every rucrusive call; In other words, each recursive call is being called with the original temp
-// This temp can't be changed after the recursive call, but we also can't change temp without the recursive call
-// Ugh circular dependency
-
-// const recursiveSplit = async (temp, l, r, setElementsArray, speed) => {
-//   if (l >= r) return;
-//   let m = Math.floor((l+r) / 2);
-//   await recursiveSplit(temp, l, m, setElementsArray, speed);
-//   await recursiveSplit(temp, m + 1, r, setElementsArray, speed);
-//   await merge(temp, l, m, r, setElementsArray, speed);
-// }
-
-// This works 
+// Essentially runs that animation of sorting the array
+// Creates two subarrays that represent the two ranges on temp that will be sorted (subarray ranges are created by recursiveSplit)
+// Sorts the two subarrays in-place by altering temp to match the sorting process
+// Returns temp at the end to be used for the next merge to be done; This way temp won't reset to its original value on every call
+  // Kept happening on first implementation and was a headache
 const merge = async (temp, l, m, r, setElementsArray, speed) => {
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
   // Defining the ranges of the left and right arrays
@@ -77,7 +66,11 @@ const merge = async (temp, l, m, r, setElementsArray, speed) => {
       }, speed);
     }).then(async () => {
       temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
+      // The weird index values are because any rightIndex signifies the number of elements that were spliced in front of the leftArray
+        // and l represents the buffer in front if the two arrays
       temp[leftIndex + l + rightIndex] = <Element key={uuid()} height={temp[leftIndex + l + rightIndex].props.height} classList='element checking' />;
+      // This index value is like this because every value in the right array comes after every other value in the leftArray (so we add left's length)
+        // And every right value that was spliced in front also come before the right array (so we add the right index)
       temp[rightIndex + leftArray.length + l] = <Element key={uuid()} height={temp[rightIndex + leftArray.length + l].props.height} classList='element checking' />;
       await setElementsArray(temp);
       return temp;
@@ -86,22 +79,17 @@ const merge = async (temp, l, m, r, setElementsArray, speed) => {
       leftIndex++;
     }
     else {
+      // The weird indice values are explained above in the while loop within the .then statement
       temp = await initiateSort(temp, tempIndex, rightIndex + l + leftArray.length, setElementsArray, speed);
       rightIndex++;
     }
     tempIndex++;
   }
+  // Don't need to worry about leftover elements in left or right array because they are already in the correct order in temp after exiting while loop
   return temp;
-  // await new Promise((resolve, reject) => {
-  //   setTimeout(async () => {
-  //     temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
-  //     await setElementsArray(temp);
-  //     resolve();
-  //   }, speed)
-  // })
 }
 
-// Creates a promise that resolves after "speed" amount of time and then changes array state to rerender 
+// Creates a promise that resolves after "speed" amount of time and then changes array state to rerender and show the two elements that are being compared
 // Calls next func after all of that happens
 const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
@@ -118,7 +106,10 @@ const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) =
   })
 }
 
-// This function is in charge of actually swapping the current with the next index
+// This function is in charge of actually "swapping" the two elements at the two indices
+// This only runs if the element in the right index needs to come before the left index
+// This doesn't actually swap anything; it splices out the right element and splices it back into the correct index
+  // This pushes everything else in the array down 1 index value
 const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
