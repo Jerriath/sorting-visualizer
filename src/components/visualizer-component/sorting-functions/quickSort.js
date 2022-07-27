@@ -18,28 +18,48 @@ import Element from '../../element-component/Element';
 
 const quickSort = async (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
-  let ranges = createRanges(temp);
-  await initiateAnimation(temp, ranges, setElementsArray, speed);
+  let dummyArray = temp.map(el => el.props.height);
+  let ranges = [];
+  createRanges(dummyArray, 0, dummyArray.length - 1, ranges);
+  console.log(ranges);
+  // await initiateAnimation(temp, ranges, setElementsArray, speed);
   stopSort();
-  return;
+  // return;
 }
 
-// This function will create the array of pivots and ranges
+// This function will create the array of pivots and ranges (all the pivots and ranges are in index values)
 const createRanges = (array, left, right, ranges) => {
-    let currentPivot = findPivot(array);
+  let currentPivot = findPivot(array, left, right);
+  ranges.push([currentPivot, left, right])
   if (left >= right) {
-    ranges.push([currentPivot, left, right])
+    return;
   }
-  let pivotIndex = findIndex(array, left, right, currentPivot);
+  let pivotIndex = partition(array, left, right, currentPivot);
+  createRanges(array, left, pivotIndex - 1, ranges);
+  createRanges(array, pivotIndex, right, ranges);
 }
 
-// This function will find the correct index for each of the ranges in the above function
-const findIndex = (array, left, right, pivot) => {
+// This function will find the correct index for each of the ranges in the above function; In charge of sorting the dummy array
+const partition = (array, left, right, pivot) => {
+  while (left <= right) {
+    while (array[left] < array[pivot]) {
+      left++;
+    }
+    while (array[right] > array[pivot]) {
+      right--;
+    }
 
+    if (left <= right) {
+      [array[left], array[right]] = [array[right], array[left]];
+      left++;
+      right--;
+    }
+  }
+  return left;
 }
 
 // This function will start the chain of animations for each entry in the ranges array
-const initiateAnimation = (temp, ranges, setElementsArray, speed) => {
+const initiateAnimation = async (temp, ranges, setElementsArray, speed) => {
 
 }
 
@@ -50,16 +70,16 @@ const initiateCheck = async (temp, indexOne, indexTwo, setElementsArray, speed) 
       resolve();
     }, speed);
   }).then(async () => {
-    temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
-    temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element checking' />;
-    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element checking' />;
+    temp = temp.map((el, index) => <Element key={uuid()} height={temp[index]} classList='element' />);
+    temp[indexOne] = <Element key={uuid()} height={temp[indexOne]} classList='element checking' />;
+    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo]} classList='element checking' />;
     await setElementsArray(temp);    
   })
   // Need some code here to check if the two elements should be swapped; if so, call initiateSort
 }
 
 
-// THESE FUNCTIONS CAME FROM MERGE SORT; MIGHT NEED THEMm FOR QUICK SORT
+// THESE FUNCTIONS CAME FROM MERGE SORT; MIGHT NEED THEM FOR QUICK SORT
 // Creates a promise that resolves after "speed" amount of time and then changes array state to rerender and show the two elements that are being compared
 // Calls next func after all of that happens
 const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
@@ -69,8 +89,8 @@ const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) =
     }, speed)
   }).then(async () => {
     temp = [...temp];
-    temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element sorting' />;
-    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element sorting' />;
+    temp[indexOne] = <Element key={uuid()} height={temp[indexOne]} classList='element sorting' />;
+    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo]} classList='element sorting' />;
     await setElementsArray(temp);
   }).then(async () => {
     return await initiateSwapping(temp, indexOne, indexTwo, setElementsArray, speed);
@@ -99,21 +119,21 @@ const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, spee
 
 // This is a helper function for choosing a good pivot; This makes the algorithm a lot fast creating an effective O(nlog(n)) on average
 // This is needed because, without it, quicksort could choose the worst pivot every time causing a O(n^2)
-const findPivot = (array) => {
-  if (array.length < 3) {
-    return 0;
+const findPivot = (array, left, right) => {
+  if (right - left + 1 < 3) {
+    return left;
   }
-  let first = array[0];
-  let middle = array[Math.floor(array.length / 2)];
-  let last = array[array.length - 1];
-  if (first.props.height < middle.props.height && first.props.height > last.props.height || first.props.height > middle.props.height && first.props.height < last.props.height) {
-    return array[0].props.height;
+  let first = array[left];
+  let middle = array[Math.floor((left + right) / 2)];
+  let last = array[right];
+  if ((first < middle && first > last) || (first > middle && first < last)) {
+    return left;
   }
-  else if (middle.props.height < first.props.height && middle.props.height > last.props.height || middle.props.height < first.props.height && middle.props.height > last.props.height) {
-    return array[Math.floor(array.length / 2)].props.height;
+  else if ((middle < first && middle > last) || (middle > first && middle < last)) {
+    return Math.floor((left + right) / 2);
   }
   else {
-    return array[array.length - 1].props.height;
+    return right;
   }
 }
 
