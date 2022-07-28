@@ -32,7 +32,8 @@ const quickSort = async (array, stopSort, setElementsArray, speed) => {
 
 // This function will create the array of pivots and ranges (all the pivots and ranges are in index values)
 const createRanges = (array, left, right, ranges) => {
-  let currentPivot = findPivot(array, left, right);
+  // let currentPivot = findPivot(array, left, right);
+  let currentPivot = Math.floor((left + right) / 2);
   ranges.push([currentPivot, left, right])
   if (left >= right) {
     return;
@@ -90,6 +91,7 @@ const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) =
       right--;
     }
   }
+  temp = await initiateSort(temp, pivot, left, pivot, setElementsArray, speed);
   return temp;
 }
 
@@ -153,6 +155,8 @@ const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, spee
 
 // This is a helper function for choosing a good pivot; This makes the algorithm a lot fast creating an effective O(nlog(n)) on average
 // This is needed because, without it, quicksort could choose the worst pivot every time causing a O(n^2)
+// IMPORTANT: This function is actually not needed since it makes the sorting worse if the array is random or pseudorandom
+  // The number of comparisons are too much for larger arrays and cause the call stack to exceed
 const findPivot = (array, left, right) => {
   if (right - left + 1 < 3) {
     return left;
