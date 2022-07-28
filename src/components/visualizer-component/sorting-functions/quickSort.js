@@ -2,20 +2,12 @@
 import {v4 as uuid} from 'uuid';
 import Element from '../../element-component/Element';
 
-// Notes: 
-  // Essentially, quick sort works by choosing a pivot and moving elements around that pivot
-  // There are two pointers or indices that point are incremented or decremeneted from the left and right respectively
-  // Once the two pointers are more than the pivot (from the left) and less than the pivot (from the right), their positions are swapped
-  // This is repeated recursively for the left and right partitions (part of the array to the left of the pivot and to the right) until the entire array is sorted
-
-
 // Plan: 
   // I will be implementing a solution similar to how I implemened merge sort
   // Create an algorithm that will recursively append an array holding a pivot value and a range to be sorted (e.g. [pivot, startIndex, endIndex])
   // By the end of the recursion, I will have a complete array of subarrays in the correct order to be sorted
   // Each entry in the array will then be used to sort that specific range in the actual array
   // This method will be able to retain the specific order in which quick sort will sort and it will be easier to animate
-
 const quickSort = async (array, stopSort, setElementsArray, speed) => {
   let temp = [...array];
   let dummyArray = temp.map(el => el.props.height);
@@ -29,9 +21,12 @@ const quickSort = async (array, stopSort, setElementsArray, speed) => {
   stopSort();
 }
 
-// This function will create the array of pivots and ranges (all the pivots and ranges are in index values)
+// This function will create the array of pivots and ranges (all the pivots and ranges are in index values; e.g. [pivotIndex, leftIndex, rigtIndex])
+// Essentially it does quick sort with a dummy array of only heights, this array maps one-to-one with the original array
+// As it performs the quick sort algorithm, it will append the pivot and range values before each range of values is sorted
+// This basically creates "instructions" for the animations functions to follow; sorts everything before, then animates it step-by-step
 const createRanges = (array, left, right, ranges) => {
-  // let currentPivot = findPivot(array, left, right);
+  // let currentPivot = findPivot(array, left, right); <---- Don't need this because it creates too many comparisons
   let currentPivot = Math.floor((left + right) / 2);
   ranges.push([currentPivot, left, right])
   if (left >= right) {
@@ -42,7 +37,7 @@ const createRanges = (array, left, right, ranges) => {
   createRanges(array, pivotIndex, right, ranges);
 }
 
-// This function will find the correct index for each of the ranges in the above function; In charge of sorting the dummy array
+// This function will find the correct pivotIndex for each of the ranges in the above function; sorts the dummy array as a side product
 const partition = (array, left, right, pivot) => {
   while (left <= right) {
     while (array[left] < array[pivot]) {
@@ -67,7 +62,11 @@ const partition = (array, left, right, pivot) => {
   return left;
 }
 
+// Note: the two functions above (createRanges and partition) are the essence of quick sort; everything after deals with animating
+
 // This function will start the chain of animations for each entry in the ranges array
+// Sets the pivot to a pivot color and then iterates the array that is being checked until it finds something that needs to swap
+// After the while loop is broke, the array is returned to be used for the next step
 const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) => {
   temp = [...temp];
   if (left === right) {
@@ -109,6 +108,8 @@ const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) =
 }
 
 // This will be responsible for highlighting the elements that are being checked
+// This function doesn't do any logic, it simply highlights the two indices that are inputted
+  // If the pivot is the same index as the left or right, the pivot color is prioritized
 const initiateCheck = async (temp, pivot, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -122,11 +123,10 @@ const initiateCheck = async (temp, pivot, indexOne, indexTwo, setElementsArray, 
     await setElementsArray(temp);
     return temp;
   })
-  // Need some code here to check if the two elements should be swapped; if so, call initiateSort
 }
 
 
-// THESE FUNCTIONS CAME FROM MERGE SORT; MIGHT NEED THEM FOR QUICK SORT
+// THESE FUNCTIONS CAME FROM MERGE SORT; refactored to work for quick sort
 // Creates a promise that resolves after "speed" amount of time and then changes array state to rerender and show the two elements that are being compared
 // Calls next func after all of that happens
 const initiateSort = async (temp, pivot, indexOne, indexTwo, setElementsArray, speed) => {
@@ -150,8 +150,7 @@ const initiateSort = async (temp, pivot, indexOne, indexTwo, setElementsArray, s
 
 // This function is in charge of actually "swapping" the two elements at the two indices
 // This only runs if the element in the right index needs to come before the left index
-// This doesn't actually swap anything; it splices out the right element and splices it back into the correct index
-  // This pushes everything else in the array down 1 index value
+// This essentially just swaps the elements at indexOne and indexTwo and then returns the altered array
 const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -173,6 +172,7 @@ const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, spee
 // This is needed because, without it, quicksort could choose the worst pivot every time causing a O(n^2)
 // IMPORTANT: This function is actually not needed since it makes the sorting worse if the array is random or pseudorandom
   // The number of comparisons are too much for larger arrays and cause the call stack to exceed
+  // This quick sort algorithm does not use this function but it's still here to show what could be done
 const findPivot = (array, left, right) => {
   if (right - left + 1 < 3) {
     return left;
