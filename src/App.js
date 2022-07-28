@@ -15,7 +15,7 @@ const App = () => {
 	// Setting some states up; All states are stored here and the values and onChange handlers are passed to children
 	const [algorithm, setAlgorithm] = useState('insertion'); // Default to insertion because it's the simplest
 	const [elements, setElements] = useState(4); // Sets the number of elements to sort; default to 4
-  const [speed, setSpeed] = useState(500);
+  const [speed, setSpeed] = useState(1500);
   const [array, setArray] = useState([]);
   const [sorting, setSorting] = useState(false);
 

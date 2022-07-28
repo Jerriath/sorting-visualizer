@@ -36,7 +36,7 @@ const Visualizer = ({algorithm, array, speed, sorting, stopSort}) => {
           mergeSort(elementsArray, stopSort, setElementsArray, speed);
           break;
         case 'quick':
-          quickSort();
+          quickSort(elementsArray, stopSort, setElementsArray, speed);
           stopSort();
           break;
       }
