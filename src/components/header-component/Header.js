@@ -3,20 +3,24 @@ import { useEffect } from 'react';
 
 import './header.css'
 
-const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
+const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange, speed, onSpeedChange, onRandomize, onSort, sorting}) => {
 
   const onSelection = (e) => {
-    onAlgorithmChange(e.target.value);
+    if(!sorting) onAlgorithmChange(e.target.value);
   }
 
   const onRangeChange = (e) => {
-    onElementsChange(e.target.value);
+    if(!sorting) onElementsChange(e.target.value);
+  }
+
+  const onIntervalChange = (e) => {
+    if(!sorting) onSpeedChange(e.target.value);
   }
 
   return (
     <header>
 			<div>
-				<h2 className='clickable' >
+				<h2 onClick={!sorting ? onRandomize : null} className='clickable' >
           Randomize Order
         </h2>
 			</div>
@@ -25,6 +29,10 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
           Change number of elements
         </h2>
         <input onChange={onRangeChange} value={elements} type='range' min='4' max='100' />
+        <h2>
+          Set the speed
+        </h2>
+        <input onChange={onIntervalChange} value={500 - speed} type='range' min='0' max='500' />
 			</div>
 			<div className='algorithm-select' >
         <button onClick={onSelection} value='insertion' className={algorithm === 'insertion' ? 'selected clickable' : 'clickable'} >
@@ -44,7 +52,7 @@ const Header = ({algorithm, onAlgorithmChange, elements, onElementsChange}) => {
         </button>
 			</div>
 			<div>
-        <h2 className='clickable' >
+        <h2 onClick={onSort} className='clickable' style={{padding: '0.5rem', fontSize: '2rem'}} >
           SORT!
         </h2>
 			</div>

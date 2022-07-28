@@ -1,8 +1,15 @@
+// Importing node modules
 import React from 'react'
+
+// Importing other project files
+import './footer.css';
+
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer className='footer'>
+      Footer
+    </footer>
   )
 }
 

@@ -1,0 +1,25 @@
+.visualizer-root {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.element {
+  margin: 0;
+  background-color: mistyrose;
+  width: 8px;
+  border: 1px solid darkslategray;
+}
+
+.checking {
+  background-color: yellow !important;
+}
+
+.sorting {
+  background-color: firebrick !important;
+}
+
+.pivot {
+  background-color: fuchsia !important;
+}
