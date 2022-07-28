@@ -21,12 +21,11 @@ const quickSort = async (array, stopSort, setElementsArray, speed) => {
   let dummyArray = temp.map(el => el.props.height);
   let ranges = [];
   createRanges(dummyArray, 0, dummyArray.length - 1, ranges);
-  console.log(dummyArray);
-  // for (let i = 0; i < ranges.length; i++) {
-  //   temp = await initiatePass(temp, ranges[i][0], ranges[i][1], ranges[i][2], setElementsArray, speed);
-  // }
+  for (let i = 0; i < ranges.length; i++) {
+    temp = await initiatePass(temp, ranges[i][0], ranges[i][1], ranges[i][2], setElementsArray, speed);
+  }
   temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
-  setElementsArray(temp);
+  await setElementsArray(temp);
   stopSort();
 }
 
@@ -55,6 +54,12 @@ const partition = (array, left, right, pivot) => {
 
     if (left <= right) {
       [array[left], array[right]] = [array[right], array[left]];
+      if (pivot === left) {
+        pivot = right;
+      }
+      else if (pivot === right) {
+        pivot = left;
+      }
       left++;
       right--;
     }
@@ -65,21 +70,30 @@ const partition = (array, left, right, pivot) => {
 // This function will start the chain of animations for each entry in the ranges array
 const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) => {
   temp = [...temp];
+  if (left === right) {
+    return await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, speed)
+    }).then(async () => {
+      temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
+      temp[pivot] = <Element key={uuid()} height={temp[pivot].props.height} classList='element pivot' />;
+      await setElementsArray(temp);
+      return temp;
+    })
+  }
   while (left <= right) {
     temp = await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
     while (temp[left].props.height < temp[pivot].props.height) {
       left++;
-      console.log('left increment')
       temp = await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
     }
     while (temp[right].props.height > temp[pivot].props.height) {
       right--;
-      console.log('right decrement')
       temp = await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
     }
 
     if (left <= right) {
-      console.log('initiate sort');
       temp = await initiateSort(temp, pivot, left, right, setElementsArray, speed);
       if (pivot === left) {
         pivot = right;
@@ -91,7 +105,6 @@ const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) =
       right--;
     }
   }
-  temp = await initiateSort(temp, pivot, left, pivot, setElementsArray, speed);
   return temp;
 }
 
@@ -123,9 +136,12 @@ const initiateSort = async (temp, pivot, indexOne, indexTwo, setElementsArray, s
     }, speed)
   }).then(async () => {
     temp = [...temp];
+    if (indexOne === indexTwo) {
+      return temp;
+    }
     temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element sorting' />;
     temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element sorting' />;
-    temp[pivot] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element pivot' />;
+    temp[pivot] = <Element key={uuid()} height={temp[pivot].props.height} classList='element pivot' />;
     await setElementsArray(temp);
   }).then(async () => {
     return await initiateSwapping(temp, indexOne, indexTwo, setElementsArray, speed);
