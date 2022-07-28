@@ -21,10 +21,12 @@ const quickSort = async (array, stopSort, setElementsArray, speed) => {
   let dummyArray = temp.map(el => el.props.height);
   let ranges = [];
   createRanges(dummyArray, 0, dummyArray.length - 1, ranges);
-  console.log(ranges);
-  // await initiateAnimation(temp, ranges, setElementsArray, speed);
+  for (let i = 0; i < ranges.length; i++) {
+    temp = await initiatePass(temp, ranges[i][0], ranges[i][1], ranges[i][2], setElementsArray, speed);
+  }
+  temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
+  setElementsArray(temp);
   stopSort();
-  // return;
 }
 
 // This function will create the array of pivots and ranges (all the pivots and ranges are in index values)
@@ -59,20 +61,41 @@ const partition = (array, left, right, pivot) => {
 }
 
 // This function will start the chain of animations for each entry in the ranges array
-const initiateAnimation = async (temp, ranges, setElementsArray, speed) => {
+const initiatePass = async (temp, pivot, left, right, setElementsArray, speed) => {
+  while (left <= right) {
+    await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
+    while (temp[left].props.height < temp[pivot].props.height) {
+      left++;
+      console.log('left increment')
+      await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
+    }
+    while (temp[right].props.height > temp[pivot].props.height) {
+      right--;
+      console.log('right decrement')
+      await initiateCheck(temp, pivot, left, right, setElementsArray, speed);
+    }
 
+    if (left <= right) {
+      console.log('initiate sort');
+      temp = await initiateSort(temp, pivot, left, right, setElementsArray, speed);
+      left++;
+      right--;
+    }
+  }
+  return temp;
 }
 
 // This will be responsible for highlighting the elements that are being checked
-const initiateCheck = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
+const initiateCheck = async (temp, pivot, indexOne, indexTwo, setElementsArray, speed) => {
   await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve();
     }, speed);
   }).then(async () => {
-    temp = temp.map((el, index) => <Element key={uuid()} height={temp[index]} classList='element' />);
-    temp[indexOne] = <Element key={uuid()} height={temp[indexOne]} classList='element checking' />;
-    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo]} classList='element checking' />;
+    temp = temp.map((el, index) => <Element key={uuid()} height={temp[index].props.height} classList='element' />);
+    temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element checking' />;
+    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element checking' />;
+    temp[pivot] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element pivot' />;
     await setElementsArray(temp);    
   })
   // Need some code here to check if the two elements should be swapped; if so, call initiateSort
@@ -82,18 +105,19 @@ const initiateCheck = async (temp, indexOne, indexTwo, setElementsArray, speed) 
 // THESE FUNCTIONS CAME FROM MERGE SORT; MIGHT NEED THEM FOR QUICK SORT
 // Creates a promise that resolves after "speed" amount of time and then changes array state to rerender and show the two elements that are being compared
 // Calls next func after all of that happens
-const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
+const initiateSort = async (temp, pivot, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve();
     }, speed)
   }).then(async () => {
     temp = [...temp];
-    temp[indexOne] = <Element key={uuid()} height={temp[indexOne]} classList='element sorting' />;
-    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo]} classList='element sorting' />;
+    temp[indexOne] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element sorting' />;
+    temp[indexTwo] = <Element key={uuid()} height={temp[indexTwo].props.height} classList='element sorting' />;
+    temp[pivot] = <Element key={uuid()} height={temp[indexOne].props.height} classList='element pivot' />;
     await setElementsArray(temp);
   }).then(async () => {
-    return await initiateSwapping(temp, indexOne, indexTwo, setElementsArray, speed);
+    return await initiateSwapping(temp, pivot, indexOne, indexTwo, setElementsArray, speed);
   })
 }
 
@@ -101,15 +125,16 @@ const initiateSort = async (temp, indexOne, indexTwo, setElementsArray, speed) =
 // This only runs if the element in the right index needs to come before the left index
 // This doesn't actually swap anything; it splices out the right element and splices it back into the correct index
   // This pushes everything else in the array down 1 index value
-const initiateSwapping = async (temp, indexOne, indexTwo, setElementsArray, speed) => {
+const initiateSwapping = async (temp, pivot, indexOne, indexTwo, setElementsArray, speed) => {
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve();
     }, speed)
   }).then(async () => {
     temp = [...temp];
-    let elementTwo = temp.splice(indexTwo, 1)[0];
-    temp.splice(indexOne, 0, elementTwo);
+    let firstEl = temp[indexOne];
+    temp[indexOne] = temp[indexTwo];
+    temp[indexTwo] = firstEl;
     await setElementsArray(temp);
     return temp;
   })
