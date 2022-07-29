@@ -1,0 +1,30 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  height: 4rem;
+  background-color: mistyrose;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.footer > h1 {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  margin: 0 2rem;
+}
+
+.github {
+  content: url('./githubLogo.png');
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: auto;
+  margin: 0 0.5rem;
+  margin-right: 0;
+}
+
+.repo {
+  margin-left: 0.5rem;
+}

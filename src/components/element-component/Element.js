@@ -1,8 +1,12 @@
+// Importing node modules
 import React from 'react'
 
-const Element = () => {
+const Element = ({height, classList}) => {
+
+
+
   return (
-    <div>Element</div>
+    <div className={classList} style={{height: height}}></div>
   )
 }
 
